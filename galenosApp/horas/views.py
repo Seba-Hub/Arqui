@@ -1,22 +1,28 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .models import Hora
+from .forms import HoraForm
+from django.contrib import messages
+
+
+
 # Create your views here.
-posts = [
-    {
-        'hora': '13:00',
-        'doctor': 'Felipe Barrios',
-        'especialidad': 'Odontologia',
-        'publicada_en': 'October 1, 2022'
-    },
-    {
-        'hora': '13:30',
-        'doctor': 'Javiera Barrios',
-        'especialidad': 'Dermatologia',
-        'publicada_en': 'October 1, 2022'
-    }
-]
+
+def create_hora(request):
+    if request.method == 'GET':
+        context = {'form': HoraForm()}
+        return render(request, 'horas/hora_form.html', context)
+    elif request.method == 'POST':
+        form = HoraForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, 'La hora ha sido publicada.')
+            return redirect('posts')
+        else:
+            messages.error(request, 'Corrija este error:')
+            return render(request, 'horas/hora_form.html', {'form': form})
 
 def home(request):
-    context = {
-        'posts': posts
-    }
+    posts = Hora.objects.all()
+    context = {'posts': posts}
     return render(request, 'horas/home.html', context)
