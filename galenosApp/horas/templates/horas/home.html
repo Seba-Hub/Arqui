@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <h1>Horas Disponibles</h1>
+	{% for post in posts%}
+	<h2>{{ post.hora }}</h2>
+	<small>Publicada : {{ post.publicada_en }} Por : {{ post.doctor}}</small>
+	<p>{{ post.especialidad }}</p>
+	{% endfor%}
+{% endblock %}
